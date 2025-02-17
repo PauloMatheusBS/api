@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home - E-commerce</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+
+      .container {
+        width: 90%;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      #category-select {
+        width: 200px;
+        padding: 10px;
+        margin: 20px 0;
+        font-size: 16px;
+      }
+
+      #product-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+      }
+
+      .product-item {
+        background-color: white;
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      .product-item img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+
+      .product-item a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+      }
+
+      .product-item a:hover {
+        color: #007bff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Produtos</h1>
+      <label for="category-select">Escolha uma categoria:</label>
+      <select id="category-select">
+        <option value="">Todas as categorias</option>
+      </select>
+
+      <div id="product-list"></div>
+    </div>
+
+    <script>
+      // Variáveis globais
+      const productList = document.getElementById("product-list");
+      const categorySelect = document.getElementById("category-select");
+
+      // Função para buscar categorias e popular o dropdown
+      async function loadCategories() {
+        const response = await fetch(
+          "https://fakestoreapi.com/products/categories"
+        );
+        const categories = await response.json();
+
+        categories.forEach((category) => {
+          const option = document.createElement("option");
+          option.value = category;
+          option.textContent = category;
+          categorySelect.appendChild(option);
+        });
+      }
+
+      // Função para buscar produtos por categoria ou todos os produtos
+      async function loadProducts(category = "") {
+        let url = "https://fakestoreapi.com/products";
+        if (category) {
+          url += `/category/${category}`;
+        }
+
+        const response = await fetch(url);
+        const products = await response.json();
+
+        productList.innerHTML = ""; // Limpar lista de produtos
+        products.forEach((product) => {
+          const productItem = document.createElement("div");
+          productItem.classList.add("product-item");
+
+          // Criar link para a página do produto
+          const productLink = document.createElement("a");
+          productLink.href = `product.html?id=${product.id}`;
+          productLink.textContent = product.title;
+
+          // Exibir imagem do produto
+          const productImage = document.createElement("img");
+          productImage.src = product.image;
+          productImage.alt = product.title;
+
+          productItem.appendChild(productImage);
+          productItem.appendChild(productLink);
+
+          productList.appendChild(productItem);
+        });
+      }
+
+      // Chamar a função para carregar as categorias e produtos ao carregar a página
+      document.addEventListener("DOMContentLoaded", () => {
+        loadCategories();
+        loadProducts(); // Carregar todos os produtos inicialmente
+      });
+
+      // Filtro de categoria
+      categorySelect.addEventListener("change", (event) => {
+        const category = event.target.value;
+        loadProducts(category); // Carregar produtos da categoria selecionada
+      });
+    </script>
+  </body>
+</html>
