@@ -11,22 +11,18 @@ Cada produto terá um link para redirecionar para uma página de detalhes do pro
 Estrutura da API
 Endpoint para produtos:
 
-bash
-Copiar
 GET /products
 Esse endpoint retorna todos os produtos.
 
 Endpoint para categorias:
 
-bash
-Copiar
+
 GET /products/categories
 Esse endpoint retorna uma lista de todas as categorias disponíveis (por exemplo, eletrônicos, roupas, etc.).
 
 Endpoint para produto único (para redirecionamento):
 
-bash
-Copiar
+
 GET /products/{id}
 Este endpoint retorna um produto específico pelo ID.
 
